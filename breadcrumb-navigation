@@ -1,0 +1,39 @@
+/*
+NOTE: This is in an extreme R & D and I do not recommend using it.  
+The idea is to get the breadcrumbs to display on the right side of the Primary navigation (The navigation that has a black background). As I have come to realize this is extremely difficult only because no matter what, the breadcrumbs will only display outside of the navigation's wrapper and menu tags. The normal repositioning method does not work in this kind of matter. (I know because I've tried. Seriously, I've tried 100 different ways if it were that simple I wouldn't have this. And definitely don't tell me to use a plugin or I might cut you.)
+*/
+<style>
+  .breadcrumb {
+    position: absolute;
+    color: white;
+    top: 165px;
+    right: 210px;
+    }
+</style>
+
+<?php
+  // add breadcrumbs to nav 
+  
+	add_filter( 'genesis_nav_items', 'custom_nav_item', 10, 2 );
+	add_filter( 'wp_nav_menu_items', 'custom_nav_item', 10, 2 );
+
+	function custom_nav_item( $menu, $args ){
+	        
+	    // make sure we are in the primary menu
+	    if ( 'primary' != $args->theme_location )
+	        return $menu;
+	    
+	    // see if a nav extra was already specified with Theme options
+	    if( genesis_get_option( 'nav_extras' ) )
+	        return $menu;
+	    
+	    // append your custom code
+	    $menu .= sprintf( '<li class="right crumbs">%s</li>', __( genesis_do_breadcrumbs() ) );
+	    
+	    // also tried
+	    // $menu .= sprintf( '<li class="right crumbs">%s</li>', genesis_do_breadcrumbs() );
+	    
+	    // return the menu
+	    return $menu;
+	        
+	}
